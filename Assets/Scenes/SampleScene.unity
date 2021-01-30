@@ -155,6 +155,8 @@ MonoBehaviour:
   _snakeHeadPrefab: {fileID: 1280242876114968072, guid: 2ce4e6696465db04891e4abae729e8f7, type: 3}
   _snakeTailPrefab: {fileID: 1692409102213229501, guid: 5fdd65718ba01124284888881d6b2f7c, type: 3}
   _initialSnakeSize: 3
+  _speed: 3
+  _moveSnake: 0
 --- !u!4 &612206898
 Transform:
   m_ObjectHideFlags: 0

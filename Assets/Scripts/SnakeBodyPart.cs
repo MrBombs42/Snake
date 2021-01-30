@@ -6,7 +6,7 @@ namespace SnakeGame_Arvore_Test.Assets.Scripts
     
     public class SnakeBodyPart : MonoBehaviour {
         
-        public Vector2 LastPostion{get;set;}
+        public Vector3 LastPostion{get;set;}
 
     }
 }

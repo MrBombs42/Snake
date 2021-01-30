@@ -10,6 +10,16 @@ public class SnakeScript : MonoBehaviour
     [SerializeField] private SnakeBodyPart _snakeHeadPrefab;
     [SerializeField] private SnakeBodyPart _snakeTailPrefab;
     [SerializeField] private int _initialSnakeSize = 3;
+    [SerializeField] private float _speed = 5;
+
+    [SerializeField] private bool _moveSnake = false;
+
+
+    private SnakeBodyPart _snakeHead{
+        get{
+            return _snakeSegmentList[0];
+        }
+    }
 
     private List<SnakeBodyPart> _snakeSegmentList;
 
@@ -32,12 +42,25 @@ public class SnakeScript : MonoBehaviour
 
         var headInstance = Instantiate(_snakeHeadPrefab, position, Quaternion.identity);
         headInstance.transform.SetParent(this.transform);
-        _snakeSegmentList.Add(headInstance);
+        _snakeSegmentList.Insert(0, headInstance);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(_moveSnake){
+            MoveSnake();
+        }
+    }
+
+    private void MoveSnake(){
+         _snakeHead.LastPostion = _snakeHead.transform.localPosition;
+        _snakeHead.transform.localPosition += _snakeHead.transform.right * _speed * Time.deltaTime;
+        for(int i = 1; i < _snakeSegmentList.Count; i++){
+            var segment = _snakeSegmentList[i];
+            segment.LastPostion = segment.transform.localPosition;
+            var dir = _snakeSegmentList[i-1].LastPostion - segment.transform.localPosition;
+            segment.transform.localPosition += dir * _speed * Time.deltaTime;
+        }
     }
 }
