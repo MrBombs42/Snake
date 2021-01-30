@@ -10,7 +10,8 @@ public class SnakeScript : MonoBehaviour
     [SerializeField] private SnakeBodyPart _snakeHeadPrefab;
     [SerializeField] private SnakeBodyPart _snakeTailPrefab;
     [SerializeField] private int _initialSnakeSize = 3;
-    [SerializeField] private float _speed = 5;
+    [SerializeField] private float _updateTime = 0.1f;
+
 
     [SerializeField] private bool _moveSnake = false;
 
@@ -37,6 +38,7 @@ public class SnakeScript : MonoBehaviour
 
         for(int i = 0; i < _initialSnakeSize -1; i++){
             var tailInstance = Instantiate(_snakeTailPrefab, position, Quaternion.identity);
+            tailInstance.LastPostion = position;
             tailInstance.transform.SetParent(this.transform);
             position.x += size;
             _snakeSegmentList.Add(tailInstance);
@@ -46,34 +48,49 @@ public class SnakeScript : MonoBehaviour
         headInstance.transform.SetParent(this.transform);
         _snakeSegmentList.Insert(0, headInstance);
     }
+    private float _nextUpdate;
 
-    // Update is called once per frame
     void Update()
     {
-        if(_moveSnake){
+        _nextUpdate += Time.deltaTime;
+        if(_moveSnake && _nextUpdate > _updateTime){
             MoveSnake();
+            _nextUpdate = 0;
         }
         UpdateDirection();
+
+        if(Input.GetKeyDown(KeyCode.Space)){
+            AddSegment();
+        }
     }
 
     private void UpdateDirection(){
         if(Input.GetKeyDown(KeyCode.A)){
-            _movementDirection = Quaternion.Euler(0,90,0) * _movementDirection;
+            _movementDirection = Quaternion.Euler(0,-90,0) * _movementDirection;
         }
 
         if(Input.GetKeyDown(KeyCode.D)){
-            _movementDirection = Quaternion.Euler(0,-90,0) * _movementDirection;
+            _movementDirection = Quaternion.Euler(0,90,0) * _movementDirection;
         }
     }
 
     private void MoveSnake(){
-         _snakeHead.LastPostion = _snakeHead.transform.localPosition;
-        _snakeHead.transform.localPosition +=  _movementDirection * _speed * Time.deltaTime;
+        _snakeHead.LastPostion = _snakeHead.transform.localPosition;
+        _snakeHead.transform.localPosition += _movementDirection;
         for(int i = 1; i < _snakeSegmentList.Count; i++){
             var segment = _snakeSegmentList[i];
-            segment.LastPostion = segment.transform.localPosition;
-            var dir = _snakeSegmentList[i-1].LastPostion - segment.transform.localPosition;
-            segment.transform.localPosition += dir * _speed * Time.deltaTime;
+            segment.LastPostion = segment.transform.localPosition;        
+            segment.transform.localPosition = _snakeSegmentList[i-1].LastPostion;
         }
+    }
+
+    private void AddSegment(){
+        _snakeHead.LastPostion = _snakeHead.transform.localPosition;
+        _snakeHead.transform.localPosition += _movementDirection;
+        var tailInstance = Instantiate(_snakeTailPrefab, _snakeHead.LastPostion, Quaternion.identity);
+        
+        tailInstance.transform.SetParent(this.transform);
+        tailInstance.LastPostion = _snakeSegmentList[1].transform.localPosition;
+        _snakeSegmentList.Insert(1, tailInstance);
     }
 }
