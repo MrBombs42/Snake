@@ -4,18 +4,19 @@ using SnakeGame_Arvore_Test.Assets.Scripts;
 using UnityEngine;
 
 public class SnakeScript : MonoBehaviour
-{
+{    
     private const int size = 1;
 
     [SerializeField] private SnakeBodyPart _snakeHeadPrefab;
     [SerializeField] private SnakeBodyPart _snakeTailPrefab;
     [SerializeField] private int _initialSnakeSize = 3;
-    [SerializeField] private float _updateTime = 0.1f;
-
+    [SerializeField] private float _baseUpdateTime = 0.1f;
+    [SerializeField] private float _loadIncrease = 0.03f;
 
     [SerializeField] private bool _moveSnake = false;
 
     private Vector3 _movementDirection; 
+    private float _updateTime;
 
     private SnakeBodyPart _snakeHead{
         get{
@@ -29,6 +30,7 @@ public class SnakeScript : MonoBehaviour
     {
         CreateSnake();
         _movementDirection = _snakeHead.transform.right;
+        _updateTime = _baseUpdateTime;
     }
 
 
@@ -57,6 +59,7 @@ public class SnakeScript : MonoBehaviour
             MoveSnake();
             _nextUpdate = 0;
         }
+
         UpdateDirection();
 
         if(Input.GetKeyDown(KeyCode.Space)){
@@ -92,5 +95,6 @@ public class SnakeScript : MonoBehaviour
         tailInstance.transform.SetParent(this.transform);
         tailInstance.LastPostion = _snakeSegmentList[1].transform.localPosition;
         _snakeSegmentList.Insert(1, tailInstance);
+        _updateTime += _loadIncrease;
     }
 }
