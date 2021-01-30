@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SnakeScript : MonoBehaviour
 {    
+
+    private const int boarSize = 50;
     private const int size = 1;
 
     [SerializeField] private SnakeBodyPart _snakeHeadPrefab;
@@ -80,11 +82,43 @@ public class SnakeScript : MonoBehaviour
     private void MoveSnake(){
         _snakeHead.LastPostion = _snakeHead.transform.localPosition;
         _snakeHead.transform.localPosition += _movementDirection;
+
+        CheckForBoardReach();
+
         for(int i = 1; i < _snakeSegmentList.Count; i++){
             var segment = _snakeSegmentList[i];
             segment.LastPostion = segment.transform.localPosition;        
             segment.transform.localPosition = _snakeSegmentList[i-1].LastPostion;
         }
+    }
+
+    private void CheckForBoardReach(){
+        var snakeXPosition = _snakeHead.transform.localPosition.x;
+        var snakeZPosition = _snakeHead.transform.localPosition.z;
+        
+        if(snakeXPosition > boarSize){
+            SetHeadNewPosition(new Vector3(-boarSize, 0, snakeZPosition));
+            return;
+        }
+
+        if(snakeXPosition < -boarSize){
+            SetHeadNewPosition(new Vector3(boarSize, 0, snakeZPosition));
+            return;
+        }
+
+        if(snakeZPosition < -boarSize){
+            SetHeadNewPosition(new Vector3(snakeXPosition, 0, boarSize));
+            return;
+        }
+
+        if(snakeZPosition > boarSize){
+            SetHeadNewPosition(new Vector3(-snakeXPosition, 0, -boarSize));
+            return;
+        }
+    }
+
+    private void SetHeadNewPosition(Vector3 newPosition){
+        _snakeHead.transform.localPosition = newPosition;
     }
 
     private void AddSegment(){
