@@ -14,6 +14,7 @@ public class SnakeScript : MonoBehaviour
 
     [SerializeField] private bool _moveSnake = false;
 
+    private Vector3 _movementDirection; 
 
     private SnakeBodyPart _snakeHead{
         get{
@@ -26,6 +27,7 @@ public class SnakeScript : MonoBehaviour
     void Start()
     {
         CreateSnake();
+        _movementDirection = _snakeHead.transform.right;
     }
 
 
@@ -51,11 +53,22 @@ public class SnakeScript : MonoBehaviour
         if(_moveSnake){
             MoveSnake();
         }
+        UpdateDirection();
+    }
+
+    private void UpdateDirection(){
+        if(Input.GetKeyDown(KeyCode.A)){
+            _movementDirection = Quaternion.Euler(0,90,0) * _movementDirection;
+        }
+
+        if(Input.GetKeyDown(KeyCode.D)){
+            _movementDirection = Quaternion.Euler(0,-90,0) * _movementDirection;
+        }
     }
 
     private void MoveSnake(){
          _snakeHead.LastPostion = _snakeHead.transform.localPosition;
-        _snakeHead.transform.localPosition += _snakeHead.transform.right * _speed * Time.deltaTime;
+        _snakeHead.transform.localPosition +=  _movementDirection * _speed * Time.deltaTime;
         for(int i = 1; i < _snakeSegmentList.Count; i++){
             var segment = _snakeSegmentList[i];
             segment.LastPostion = segment.transform.localPosition;
