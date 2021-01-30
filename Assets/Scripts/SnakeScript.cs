@@ -17,6 +17,8 @@ public class SnakeScript : MonoBehaviour
 
     [SerializeField] private bool _moveSnake = false;
 
+    private KeyCode _rightInput;
+    private KeyCode _leftInput;
     private Vector3 _movementDirection; 
     private float _updateTime;
 
@@ -52,6 +54,7 @@ public class SnakeScript : MonoBehaviour
         headInstance.transform.SetParent(this.transform);
         _snakeSegmentList.Insert(0, headInstance);
     }
+
     private float _nextUpdate;
 
     void Update()
@@ -69,12 +72,17 @@ public class SnakeScript : MonoBehaviour
         }
     }
 
+    public void SetSnakeInput(KeyCode rigthInput, KeyCode leftInput){
+        _rightInput = rigthInput;
+        _leftInput = leftInput;
+    }
+
     private void UpdateDirection(){
-        if(Input.GetKeyDown(KeyCode.A)){
+        if(Input.GetKeyDown(_leftInput)){
             _movementDirection = Quaternion.Euler(0,-90,0) * _movementDirection;
         }
 
-        if(Input.GetKeyDown(KeyCode.D)){
+        if(Input.GetKeyDown(_rightInput)){
             _movementDirection = Quaternion.Euler(0,90,0) * _movementDirection;
         }
     }
