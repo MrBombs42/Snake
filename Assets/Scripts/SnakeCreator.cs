@@ -9,6 +9,7 @@ namespace SnakeGame.Assets.Scripts
     public class SnakeCreator : MonoBehaviour {
 
         [SerializeField] private SnakeScript _snakePrefab;
+        [SerializeField] private SnakeCreatorUI _snakeCreatorUI;
 
         private List<KeyCode> _usedKeys = new List<KeyCode>();
         void Start()
@@ -22,7 +23,12 @@ namespace SnakeGame.Assets.Scripts
 
 
         private void CheckInput(){
-            if (!Input.anyKey){
+
+            string feedback;
+            feedback = "Precisone 2 teclas para criar uma cobra";
+            _snakeCreatorUI.ChangeFeedback(feedback);       
+
+            if (!Input.anyKey){               
                 return;
             }
 
@@ -30,28 +36,32 @@ namespace SnakeGame.Assets.Scripts
                 .Where(key => !_usedKeys.Contains(key) && key != KeyCode.None)
                 .ToArray();
 
-
+           
             if(keysPressed.Length > 2){
-                Debug.LogError("Precisone somente 2 teclas");
+                feedback = "Precisone somente 2 teclas";
+               
+                _snakeCreatorUI.ChangeFeedback(feedback);
                 return;
             }
 
             if(keysPressed.Length == 1){
-                Debug.LogError("Precisone uma segunda tecla");
+
+                feedback = string.Format("Tecla precionada: {0}. Precisone uma segunda tecla", keysPressed[0]);
+               
+                _snakeCreatorUI.ChangeFeedback(feedback);                
                 return;
             }
 
             if(keysPressed.Length == 2){
                 //TODO position
                var snake = Instantiate(_snakePrefab);
-               snake.SetSnakeInput(keysPressed[0], keysPressed[1]);
+               snake.SetSnakeInput(keysPressed[1], keysPressed[0]);
 
                foreach (var item in keysPressed)
                {
                    _usedKeys.Add(item);
                }
-            }
-        
+            }        
         }
         
     }
