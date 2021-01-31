@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using SnakeGame.Assets.Scripts;
 using SnakeGame_Arvore_Test.Assets.Scripts;
 using UnityEngine;
 
@@ -7,6 +9,8 @@ public class SnakeScript : MonoBehaviour
 {    
     private const int boarSize = 50;//TODO move from here
     private const int size = 1;
+
+    public event Action<SnakeScript> OnSnakeDeath;
 
     [SerializeField] private SnakeBodyPart _snakeHeadPrefab;
     [SerializeField] private SnakeBodyPart _snakeTailPrefab;
@@ -16,8 +20,11 @@ public class SnakeScript : MonoBehaviour
 
     [SerializeField] private bool _moveSnake = false;
 
-    private KeyCode _rightInput;
-    private KeyCode _leftInput;
+    [SerializeField] private float _starMovingInSecondsAfterRespawn = 1;
+
+    public PlayerKeyCodePair KeyCodePair{get{return _keyCodePair;}}
+
+    private PlayerKeyCodePair _keyCodePair;
     private Vector3 _movementDirection; 
     private float _updateTime;
 
@@ -31,9 +38,7 @@ public class SnakeScript : MonoBehaviour
 
     void Start()
     {
-        CreateSnake();
-        _movementDirection = _snakeHead.transform.right;
-        _updateTime = _baseUpdateTime;
+        InitializeDefaultSnake();
     }
 
     private void CreateSnake(){
@@ -59,7 +64,8 @@ public class SnakeScript : MonoBehaviour
         Debug.LogError("Bati cabeça");
 
         if(CheckForSelfCollision(collision)){
-            Debug.LogError("AIIII");
+            Debug.LogError("Mori");
+            SnakeDeath();
         }
     }
 
@@ -68,8 +74,44 @@ public class SnakeScript : MonoBehaviour
         if(!CheckForSelfCollision(collision)){
            return;
         }
-        
+
         Debug.LogError("Bati o cu");
+    }
+
+    private void SnakeDeath(){
+
+        //TODO check for Battering ram]
+        _moveSnake = false;
+        
+        foreach (var segment in _snakeSegmentList)
+        {
+            segment.gameObject.SetActive(false);
+            Destroy(segment.gameObject);
+        }
+        _snakeSegmentList.Clear();
+
+        if(OnSnakeDeath != null){
+            OnSnakeDeath(this);
+        }
+    }
+
+    public void Respawn(){
+        //TODO check for TimeTravel
+        InitializeDefaultSnake();
+        
+        //TODO animation
+        StartCoroutine(StartMovingAfterRespawn());
+    }
+
+    private void InitializeDefaultSnake(){
+        CreateSnake();
+        _movementDirection = _snakeHead.transform.right;
+        _updateTime = _baseUpdateTime;
+    }
+
+    private IEnumerator StartMovingAfterRespawn(){
+        yield return new WaitForSeconds(_starMovingInSecondsAfterRespawn);
+        _moveSnake = true;
     }
 
     private bool CheckForSelfCollision(Collider otherCollider){       
@@ -94,16 +136,16 @@ public class SnakeScript : MonoBehaviour
     }
 
     public void SetSnakeInput(KeyCode rigthInput, KeyCode leftInput){
-        _rightInput = rigthInput;
-        _leftInput = leftInput;
+        _keyCodePair.RightKey = rigthInput;
+        _keyCodePair.LeftKey = leftInput;
     }
 
     private void UpdateDirection(){
-        if(Input.GetKeyDown(_leftInput)){
+        if(Input.GetKeyDown(_keyCodePair.LeftKey)){
             _movementDirection = Quaternion.Euler(0,-90,0) * _movementDirection;
         }
 
-        if(Input.GetKeyDown(_rightInput)){
+        if(Input.GetKeyDown(_keyCodePair.RightKey)){
             _movementDirection = Quaternion.Euler(0,90,0) * _movementDirection;
         }
     }

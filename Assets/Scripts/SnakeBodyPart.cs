@@ -21,5 +21,11 @@ namespace SnakeGame_Arvore_Test.Assets.Scripts
             }
         }
 
+
+        void OnDestroy()
+        {
+            _onCollisionCallback = null;
+        }
+
     }
 }
