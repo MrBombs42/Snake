@@ -64,12 +64,13 @@ namespace SnakeGame.Assets.Scripts
 
         public static IEnumerable<KeyCode> GetCurrentKeysDown()
         {
-            if (Input.anyKeyDown)
-            for (int i = 0; i < _enabledKeys.Length; i++){
-                if (Input.GetKeyDown(_enabledKeys[i])){
-                    yield return _enabledKeys[i];
-                }                   
-            }                
+            if (Input.anyKeyDown){
+                for (int i = 0; i < _enabledKeys.Length; i++){
+                    if (Input.GetKeyDown(_enabledKeys[i])){
+                        yield return _enabledKeys[i];
+                    }                   
+                }
+            }
         }
 
         public static IEnumerable<KeyCode> GetCurrentKeys()
@@ -80,8 +81,7 @@ namespace SnakeGame.Assets.Scripts
                         yield return _enabledKeys[i];
                     }
                 }  
-            }                       
-                        
+            }                               
         }
 
     }

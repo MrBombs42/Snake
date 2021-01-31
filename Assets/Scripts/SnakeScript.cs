@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class SnakeScript : MonoBehaviour
 {    
-
-    private const int boarSize = 50;
+    private const int boarSize = 50;//TODO move from here
     private const int size = 1;
 
     [SerializeField] private SnakeBodyPart _snakeHeadPrefab;
@@ -37,7 +36,6 @@ public class SnakeScript : MonoBehaviour
         _updateTime = _baseUpdateTime;
     }
 
-
     private void CreateSnake(){
         Vector3 position = this.transform.position;
         _snakeSegmentList = new List<SnakeBodyPart>();
@@ -45,14 +43,37 @@ public class SnakeScript : MonoBehaviour
         for(int i = 0; i < _initialSnakeSize -1; i++){
             var tailInstance = Instantiate(_snakeTailPrefab, position, Quaternion.identity);
             tailInstance.LastPostion = position;
+            tailInstance.SetOnCollisionCallback(OnTailCollision);
             tailInstance.transform.SetParent(this.transform);
             position.x += size;
             _snakeSegmentList.Add(tailInstance);
         }
 
         var headInstance = Instantiate(_snakeHeadPrefab, position, Quaternion.identity);
+        headInstance.SetOnCollisionCallback(OnHeadCollision);
         headInstance.transform.SetParent(this.transform);
         _snakeSegmentList.Insert(0, headInstance);
+    }
+
+    private void OnHeadCollision(Collider collision){
+        Debug.LogError("Bati cabeça");
+
+        if(CheckForSelfCollision(collision)){
+            Debug.LogError("AIIII");
+        }
+    }
+
+    private void OnTailCollision(Collider collision){
+
+        if(!CheckForSelfCollision(collision)){
+           return;
+        }
+        
+        Debug.LogError("Bati o cu");
+    }
+
+    private bool CheckForSelfCollision(Collider otherCollider){       
+        return otherCollider.transform.parent == this.transform;
     }
 
     private float _nextUpdate;
@@ -136,6 +157,7 @@ public class SnakeScript : MonoBehaviour
         
         tailInstance.transform.SetParent(this.transform);
         tailInstance.LastPostion = _snakeSegmentList[1].transform.localPosition;
+        tailInstance.SetOnCollisionCallback(OnTailCollision);
         _snakeSegmentList.Insert(1, tailInstance);
         _updateTime += _loadIncrease;
     }

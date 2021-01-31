@@ -47,5 +47,5 @@ MonoBehaviour:
   _snakeTailPrefab: {fileID: 1692409102213229501, guid: 5fdd65718ba01124284888881d6b2f7c, type: 3}
   _initialSnakeSize: 3
   _baseUpdateTime: 0.1
-  _loadIncrease: 0.03
+  _loadIncrease: 0.02
   _moveSnake: 1
