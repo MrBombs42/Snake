@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63789f5baedab2541bb13f7d9e45d2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _respawnAnimationName: 
 --- !u!54 &-8603615266943442568
 Rigidbody:
   m_ObjectHideFlags: 0

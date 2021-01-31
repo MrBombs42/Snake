@@ -61,7 +61,6 @@ public class SnakeScript : MonoBehaviour
     }
 
     private void OnHeadCollision(Collider collision){
-        Debug.LogError("Bati cabeça");
 
         if(CheckForSelfCollision(collision)){
             Debug.LogError("Mori");
@@ -74,18 +73,16 @@ public class SnakeScript : MonoBehaviour
         if(!CheckForSelfCollision(collision)){
            return;
         }
-
-        Debug.LogError("Bati o cu");
     }
 
     private void SnakeDeath(){
 
-        //TODO check for Battering ram]
+        //TODO check for Battering ram
+
         _moveSnake = false;
-        
+        this.gameObject.SetActive(false);
         foreach (var segment in _snakeSegmentList)
-        {
-            segment.gameObject.SetActive(false);
+        {           
             Destroy(segment.gameObject);
         }
         _snakeSegmentList.Clear();
@@ -97,7 +94,13 @@ public class SnakeScript : MonoBehaviour
 
     public void Respawn(){
         //TODO check for TimeTravel
+        this.gameObject.SetActive(true);
         InitializeDefaultSnake();
+
+        foreach (var segment in _snakeSegmentList)
+        {
+            segment.PlayerRespawnAnimation();
+        }
         
         //TODO animation
         StartCoroutine(StartMovingAfterRespawn());
@@ -105,13 +108,17 @@ public class SnakeScript : MonoBehaviour
 
     private void InitializeDefaultSnake(){
         CreateSnake();
-        _movementDirection = _snakeHead.transform.right;
+        _movementDirection = Vector3.right;
         _updateTime = _baseUpdateTime;
     }
 
     private IEnumerator StartMovingAfterRespawn(){
         yield return new WaitForSeconds(_starMovingInSecondsAfterRespawn);
         _moveSnake = true;
+        foreach (var segment in _snakeSegmentList)
+        {
+            segment.StopRespawnAnimation();
+        }
     }
 
     private bool CheckForSelfCollision(Collider otherCollider){       
