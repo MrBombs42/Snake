@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class SnakeScript : MonoBehaviour
 {    
-        private const int size = 1;
+    private const int size = 1;
 
     public event Action<SnakeScript> OnSnakeDeath;
 
@@ -16,9 +16,7 @@ public class SnakeScript : MonoBehaviour
     [SerializeField] private int _initialSnakeSize = 3;
     [SerializeField] private float _baseUpdateTime = 0.1f;
     [SerializeField] private float _loadIncrease = 0.03f;
-
     [SerializeField] private bool _moveSnake = false;
-
     [SerializeField] private float _starMovingInSecondsAfterRespawn = 1;
 
     public PlayerKeyCodePair KeyCodePair{get{return _keyCodePair;}}
@@ -67,9 +65,9 @@ public class SnakeScript : MonoBehaviour
         }
 
         Block block;
-
         if(CheckCollisionWithBlock(collision, out block)){
             AddSegment();
+            BlockBenefitsResolver.ResolveBlock(block, this);
         }
 
     }
@@ -205,6 +203,11 @@ public class SnakeScript : MonoBehaviour
             SetHeadNewPosition(new Vector3(-snakeXPosition, 0, -boardSize));
             return;
         }
+    }
+
+    public void DecreateLoad(float decreaseNumber){
+        _updateTime -= decreaseNumber;
+        _updateTime = Mathf.Max(_updateTime, 0.01f);
     }
 
     private void SetHeadNewPosition(Vector3 newPosition){
