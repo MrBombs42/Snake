@@ -57,6 +57,7 @@ namespace SnakeGame.Assets.Scripts
                var snake = Instantiate(_snakePrefab);
                snake.SetSnakeInput(keysPressed[1], keysPressed[0]);
                snake.OnSnakeDeath += OnSnakeDeath;
+               snake.gameObject.name = string.Format("snake {0}", _snakeSpawned.Count);
                _snakeSpawned.Add(snake);
 
                foreach (var item in keysPressed)

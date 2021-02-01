@@ -24,6 +24,7 @@ public class SnakeScript : MonoBehaviour
     private PlayerKeyCodePair _keyCodePair;
     private Vector3 _movementDirection; 
     private float _updateTime;
+    public int _batteringRamBlocks = 0;
 
     private SnakeBodyPart _snakeHead{
         get{
@@ -57,10 +58,9 @@ public class SnakeScript : MonoBehaviour
         _snakeSegmentList.Insert(0, headInstance);
     }
 
-    private void OnHeadCollision(Collider collision){
-
+    private void OnHeadCollision(Collider collision, SnakeBodyPart myBodyPart)
+    {
         if(CheckForSelfCollision(collision)){
-            Debug.LogError("Mori");
             SnakeDeath();
         }
 
@@ -68,15 +68,53 @@ public class SnakeScript : MonoBehaviour
         if(CheckCollisionWithBlock(collision, out block)){
             AddSegment();
             BlockBenefitsResolver.ResolveBlock(block, this);
+            return;
         }
 
+        SnakeScript otherSnake;
+        if (CheckCollisionWithOtherSnake(collision, out otherSnake))
+        {
+            if (HasBatteringRamEnabled())
+            {
+                StartCoroutine(DecreaseBatteringRam());
+            }
+            else
+            {
+                SnakeDeath();
+            }
+        }
     }
 
-    private void OnTailCollision(Collider collision){
-
-        if(!CheckForSelfCollision(collision)){
+    private void OnTailCollision(Collider collision, SnakeBodyPart myBodyPart)
+    {
+        if(CheckForSelfCollision(collision)){
            return;
         }
+
+        SnakeScript otherSnake;
+        if (CheckCollisionWithOtherSnake(collision, out otherSnake))
+        {
+            Debug.LogErrorFormat( " eu {0} Cobra bateu em mim {1}", this.gameObject.name, otherSnake.gameObject.name);
+            Debug.LogError(otherSnake._batteringRamBlocks);
+            if (otherSnake.HasBatteringRamEnabled())
+            {
+                _snakeSegmentList.Remove(myBodyPart);
+                Destroy(myBodyPart.gameObject);
+            }
+        }
+    }
+
+    private IEnumerator DecreaseBatteringRam()
+    {
+        yield return new WaitForSeconds(1);//todo check for head collision end
+        _batteringRamBlocks--;
+        Debug.LogError("Removeing batt");
+    }
+
+    private bool CheckCollisionWithOtherSnake(Collider other, out SnakeScript snake)
+    {
+        snake = other.transform.parent.GetComponent<SnakeScript>();
+        return snake != null;
     }
 
     private bool CheckCollisionWithBlock(Collider other, out Block block){
@@ -85,9 +123,6 @@ public class SnakeScript : MonoBehaviour
     }
 
     private void SnakeDeath(){
-
-        //TODO check for Battering ram
-
         _moveSnake = false;
         this.gameObject.SetActive(false);
         foreach (var segment in _snakeSegmentList)
@@ -99,6 +134,18 @@ public class SnakeScript : MonoBehaviour
         if(OnSnakeDeath != null){
             OnSnakeDeath(this);
         }
+        Debug.LogError("Mori");
+    }
+
+    public bool HasBatteringRamEnabled()
+    {
+        return _batteringRamBlocks > 0;
+    }
+
+    public void AddBatteringRamBlock()
+    {
+        Debug.LogError("Add battering");
+        _batteringRamBlocks++;
     }
 
     public void Respawn(){
@@ -200,7 +247,7 @@ public class SnakeScript : MonoBehaviour
         }
 
         if(snakeZPosition > boardSize){
-            SetHeadNewPosition(new Vector3(-snakeXPosition, 0, -boardSize));
+            SetHeadNewPosition(new Vector3(snakeXPosition, 0, -boardSize));
             return;
         }
     }

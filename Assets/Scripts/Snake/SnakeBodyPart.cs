@@ -9,21 +9,21 @@ namespace SnakeGame_Arvore_Test.Assets.Scripts
         public Vector3 LastPostion {get;set;}
         [SerializeField] private string _respawnAnimationName; 
 
-        private Action<Collider> _onCollisionCallback;
+        private Action<Collider, SnakeBodyPart> _onCollisionCallback;
 
         void Awake()
         {
             _animation = GetComponent<Animation>();
         }
 
-        public void SetOnCollisionCallback(Action<Collider> onCollision){
+        public void SetOnCollisionCallback(Action<Collider, SnakeBodyPart> onCollision){
             _onCollisionCallback = onCollision;
         }
 
         void OnTriggerEnter(Collider other)
         {
             if(_onCollisionCallback != null){
-                _onCollisionCallback(other);
+                _onCollisionCallback(other, this);
             }
         }
 
