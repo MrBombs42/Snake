@@ -321,6 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _blockTypesPrefab:
+  - {fileID: 3898198540098227210, guid: 74224f68be6174f4898ddcc151d8ccfe, type: 3}
   - {fileID: 3898198540098227210, guid: d151a197724c65a4c9fa87176d000e0b, type: 3}
 --- !u!23 &673722427
 MeshRenderer:

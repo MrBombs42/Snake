@@ -30,8 +30,10 @@ namespace SnakeGame.Assets.Scripts
         }
 
 
-        private Block CreateBlock(Vector3 position){
-            var block = _blockTypesPrefab[0];//TODO fazer factory para tipo de blocos
+        private Block CreateBlock(Vector3 position)
+        {
+            var index = RandomBlockIndex();
+            var block = _blockTypesPrefab[index];
             return Instantiate(block, position, block.transform.rotation);
         }
 
@@ -41,6 +43,11 @@ namespace SnakeGame.Assets.Scripts
             var posZ =  Random.Range(-boardSize, boardSize);
 
             return new Vector3(posX, 0, posZ);
+        }
+
+        private int RandomBlockIndex()
+        {
+            return Random.Range(0, _blockTypesPrefab.Length);
         }
         
     }
