@@ -7,8 +7,7 @@ using UnityEngine;
 
 public class SnakeScript : MonoBehaviour
 {    
-    private const int boarSize = 50;//TODO move from here
-    private const int size = 1;
+        private const int size = 1;
 
     public event Action<SnakeScript> OnSnakeDeath;
 
@@ -66,6 +65,13 @@ public class SnakeScript : MonoBehaviour
             Debug.LogError("Mori");
             SnakeDeath();
         }
+
+        Block block;
+
+        if(CheckCollisionWithBlock(collision, out block)){
+            AddSegment();
+        }
+
     }
 
     private void OnTailCollision(Collider collision){
@@ -73,6 +79,11 @@ public class SnakeScript : MonoBehaviour
         if(!CheckForSelfCollision(collision)){
            return;
         }
+    }
+
+    private bool CheckCollisionWithBlock(Collider other, out Block block){
+        block = other.gameObject.GetComponent<Block>();
+        return block != null;
     }
 
     private void SnakeDeath(){
@@ -173,24 +184,25 @@ public class SnakeScript : MonoBehaviour
     private void CheckForBoardReach(){
         var snakeXPosition = _snakeHead.transform.localPosition.x;
         var snakeZPosition = _snakeHead.transform.localPosition.z;
-        
-        if(snakeXPosition > boarSize){
-            SetHeadNewPosition(new Vector3(-boarSize, 0, snakeZPosition));
+        var boardSize =  GameBoard.BoardSize;
+
+        if(snakeXPosition > boardSize){
+            SetHeadNewPosition(new Vector3(-boardSize, 0, snakeZPosition));
             return;
         }
 
-        if(snakeXPosition < -boarSize){
-            SetHeadNewPosition(new Vector3(boarSize, 0, snakeZPosition));
+        if(snakeXPosition < -boardSize){
+            SetHeadNewPosition(new Vector3(boardSize, 0, snakeZPosition));
             return;
         }
 
-        if(snakeZPosition < -boarSize){
-            SetHeadNewPosition(new Vector3(snakeXPosition, 0, boarSize));
+        if(snakeZPosition < -boardSize){
+            SetHeadNewPosition(new Vector3(snakeXPosition, 0, boardSize));
             return;
         }
 
-        if(snakeZPosition > boarSize){
-            SetHeadNewPosition(new Vector3(-snakeXPosition, 0, -boarSize));
+        if(snakeZPosition > boardSize){
+            SetHeadNewPosition(new Vector3(-snakeXPosition, 0, -boardSize));
             return;
         }
     }

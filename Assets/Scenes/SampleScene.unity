@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 673722428}
   - component: {fileID: 673722427}
   - component: {fileID: 673722430}
+  - component: {fileID: 673722426}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -307,6 +308,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &673722426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673722425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9c47cf3665f6de48a56ee6bc1ac1e0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _blockTypesPrefab:
+  - {fileID: 3898198540098227210, guid: 74224f68be6174f4898ddcc151d8ccfe, type: 3}
 --- !u!23 &673722427
 MeshRenderer:
   m_ObjectHideFlags: 0

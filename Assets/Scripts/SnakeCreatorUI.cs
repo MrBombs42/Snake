@@ -17,13 +17,6 @@ namespace SnakeGame.Assets.Scripts
 
            _feedback.text = feedback;
        }
-
-       public void DisableFeedback(){
-           if(_feedback.gameObject.activeInHierarchy){
-                _feedback.gameObject.SetActive(false);
-           }    
-          
-       }
        
    }
 }
