@@ -9,7 +9,8 @@ namespace SnakeGame.Assets.Scripts
     {
         private static readonly Dictionary<BlockTypes, IBlockBenefit> _mapper = new Dictionary<BlockTypes, IBlockBenefit>{
             {BlockTypes.EnginePower, new EnginePowerBlockBenefit()},
-            {BlockTypes.BatteringRam, new BatteringRamBlockBenefit()}
+            {BlockTypes.BatteringRam, new BatteringRamBlockBenefit()},
+            {BlockTypes.TimeTravel, new TimeTravelBlockBenefit()}
         };       
 
         public static void ResolveBlock(Block block, SnakeScript snake){

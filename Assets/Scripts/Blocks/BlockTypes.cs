@@ -6,6 +6,7 @@ namespace SnakeGame.Assets.Scripts.Blocks
     {
         EnginePower,
         BatteringRam,
+        TimeTravel,
 
     }
 }

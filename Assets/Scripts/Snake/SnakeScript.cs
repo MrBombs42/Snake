@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using SnakeGame.Assets.Scripts;
 using SnakeGame_Arvore_Test.Assets.Scripts;
 using UnityEngine;
@@ -24,7 +25,8 @@ public class SnakeScript : MonoBehaviour
     private PlayerKeyCodePair _keyCodePair;
     private Vector3 _movementDirection; 
     private float _updateTime;
-    public int _batteringRamBlocks = 0;
+    private int _batteringRamBlocks = 0;
+    private TimeTravelStatusHolder _timeTravelStatusHolder;
 
     private SnakeBodyPart _snakeHead{
         get{
@@ -36,14 +38,14 @@ public class SnakeScript : MonoBehaviour
 
     void Start()
     {
-        InitializeDefaultSnake();
+        InitializeDefaultSnake(_initialSnakeSize, transform.position);
     }
 
-    private void CreateSnake(){
-        Vector3 position = this.transform.position;
+    private void CreateSnake(int snakeSize, Vector3 position){
+       
         _snakeSegmentList = new List<SnakeBodyPart>();
 
-        for(int i = 0; i < _initialSnakeSize -1; i++){
+        for(int i = 0; i < snakeSize - 1; i++){
             var tailInstance = Instantiate(_snakeTailPrefab, position, Quaternion.identity);
             tailInstance.LastPostion = position;
             tailInstance.SetOnCollisionCallback(OnTailCollision);
@@ -94,8 +96,6 @@ public class SnakeScript : MonoBehaviour
         SnakeScript otherSnake;
         if (CheckCollisionWithOtherSnake(collision, out otherSnake))
         {
-            Debug.LogErrorFormat( " eu {0} Cobra bateu em mim {1}", this.gameObject.name, otherSnake.gameObject.name);
-            Debug.LogError(otherSnake._batteringRamBlocks);
             if (otherSnake.HasBatteringRamEnabled())
             {
                 _snakeSegmentList.Remove(myBodyPart);
@@ -131,10 +131,41 @@ public class SnakeScript : MonoBehaviour
         }
         _snakeSegmentList.Clear();
 
+        if (_timeTravelStatusHolder != null)
+        {
+            TimeTravel();
+            return;
+        }
+
         if(OnSnakeDeath != null){
             OnSnakeDeath(this);
         }
         Debug.LogError("Mori");
+    }
+
+    private void TimeTravel()
+    {
+        InitializeDefaultSnake(_timeTravelStatusHolder.SnakeSize, _timeTravelStatusHolder.Position);
+        this.gameObject.SetActive(true);
+        //TODO change feedback
+        foreach (var segment in _snakeSegmentList)
+        {
+            segment.PlayerRespawnAnimation();
+        }
+
+        //TODO animation
+        StartCoroutine(StartMovingAfterRespawn());
+
+        _timeTravelStatusHolder = null;
+    }
+
+    public void AddTimeTravel()
+    {
+        _timeTravelStatusHolder = new TimeTravelStatusHolder
+        {
+            Position = _snakeHead.transform.localPosition,
+            SnakeSize = _snakeSegmentList.Count
+        };
     }
 
     public bool HasBatteringRamEnabled()
@@ -149,9 +180,9 @@ public class SnakeScript : MonoBehaviour
     }
 
     public void Respawn(){
-        //TODO check for TimeTravel
+
         this.gameObject.SetActive(true);
-        InitializeDefaultSnake();
+        InitializeDefaultSnake(_initialSnakeSize, transform.position);
 
         foreach (var segment in _snakeSegmentList)
         {
@@ -162,8 +193,8 @@ public class SnakeScript : MonoBehaviour
         StartCoroutine(StartMovingAfterRespawn());
     }
 
-    private void InitializeDefaultSnake(){
-        CreateSnake();
+    private void InitializeDefaultSnake(int snakeSize, Vector3 position){
+        CreateSnake(snakeSize, position);
         _movementDirection = Vector3.right;
         _updateTime = _baseUpdateTime;
     }
