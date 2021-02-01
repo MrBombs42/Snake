@@ -27,6 +27,7 @@ public class SnakeScript : MonoBehaviour
     private float _updateTime;
     private int _batteringRamBlocks = 0;
     private TimeTravelStatusHolder _timeTravelStatusHolder;
+    private float _nextUpdate;
 
     private SnakeBodyPart _snakeHead{
         get{
@@ -108,7 +109,6 @@ public class SnakeScript : MonoBehaviour
     {
         yield return new WaitForSeconds(1);//todo check for head collision end
         _batteringRamBlocks--;
-        Debug.LogError("Removeing batt");
     }
 
     private bool CheckCollisionWithOtherSnake(Collider other, out SnakeScript snake)
@@ -140,6 +140,7 @@ public class SnakeScript : MonoBehaviour
         if(OnSnakeDeath != null){
             OnSnakeDeath(this);
         }
+
         Debug.LogError("Mori");
     }
 
@@ -175,7 +176,6 @@ public class SnakeScript : MonoBehaviour
 
     public void AddBatteringRamBlock()
     {
-        Debug.LogError("Add battering");
         _batteringRamBlocks++;
     }
 
@@ -211,8 +211,6 @@ public class SnakeScript : MonoBehaviour
     private bool CheckForSelfCollision(Collider otherCollider){       
         return otherCollider.transform.parent == this.transform;
     }
-
-    private float _nextUpdate;
 
     void Update()
     {

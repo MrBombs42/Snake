@@ -74,9 +74,7 @@ namespace SnakeGame.Assets.Scripts
 
             var keysPressed = InputHelper.GetCurrentKeys()
                 .Where(key => key != KeyCode.None);
-
-            var tmpRespawnedSnakes = new List<SnakeScript>();
-
+            
             for(int i = 0; i < _deadSnakes.Count; i++){
                 var snake = _deadSnakes[i];
                 var keycodePair = snake.KeyCodePair;
@@ -87,7 +85,6 @@ namespace SnakeGame.Assets.Scripts
                     _deadSnakes.Remove(snake);
                     i--;
                 }
-
             }
         }
 
