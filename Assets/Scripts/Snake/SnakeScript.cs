@@ -5,6 +5,7 @@ using Assets.Scripts;
 using SnakeGame.Assets.Scripts;
 using SnakeGame_Arvore_Test.Assets.Scripts;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SnakeScript : MonoBehaviour
 {    
@@ -28,6 +29,7 @@ public class SnakeScript : MonoBehaviour
     private int _batteringRamBlocks = 0;
     private TimeTravelStatusHolder _timeTravelStatusHolder;
     private float _nextUpdate;
+    private Color _tailColor;
 
     protected SnakeBodyPart _snakeHead{
         get{
@@ -39,13 +41,16 @@ public class SnakeScript : MonoBehaviour
 
     void Start()
     {
-        InitializeDefaultSnake(_initialSnakeSize, transform.position);
+        InitializeDefaultSnake(_initialSnakeSize, transform.position, true);
         _moveSnake = true;
     }
 
-    private void CreateSnake(int snakeSize, Vector3 position){
+    private void CreateSnake(int snakeSize, Vector3 position, bool changeColor){
        
         _snakeSegmentList = new List<SnakeBodyPart>();
+
+        _tailColor = Random.ColorHSV();
+        Debug.LogError(_tailColor);
 
         for(int i = 0; i < snakeSize - 1; i++){
             var tailInstance = Instantiate(_snakeTailPrefab, position, Quaternion.identity);
@@ -53,6 +58,10 @@ public class SnakeScript : MonoBehaviour
             tailInstance.SetOnCollisionCallback(OnTailCollision);
             tailInstance.transform.SetParent(this.transform);
             position.x += size;
+            if (changeColor)
+            {
+                tailInstance.SetColor(_tailColor);
+            }
             _snakeSegmentList.Add(tailInstance);
         }
 
@@ -147,7 +156,7 @@ public class SnakeScript : MonoBehaviour
 
     private void TimeTravel()
     {
-        InitializeDefaultSnake(_timeTravelStatusHolder.SnakeSize, _timeTravelStatusHolder.Position);
+        InitializeDefaultSnake(_timeTravelStatusHolder.SnakeSize, _timeTravelStatusHolder.Position, false);
         this.gameObject.SetActive(true);
         //TODO change feedback
         foreach (var segment in _snakeSegmentList)
@@ -183,7 +192,7 @@ public class SnakeScript : MonoBehaviour
     public void Respawn(){
 
         this.gameObject.SetActive(true);
-        InitializeDefaultSnake(_initialSnakeSize, transform.position);
+        InitializeDefaultSnake(_initialSnakeSize, transform.position, false);
 
         foreach (var segment in _snakeSegmentList)
         {
@@ -194,8 +203,8 @@ public class SnakeScript : MonoBehaviour
         StartCoroutine(StartMovingAfterRespawn());
     }
 
-    private void InitializeDefaultSnake(int snakeSize, Vector3 position){
-        CreateSnake(snakeSize, position);
+    private void InitializeDefaultSnake(int snakeSize, Vector3 position, bool changeColor){
+        CreateSnake(snakeSize, position, changeColor);
         _movementDirection = Vector3.right;
         _updateTime = _baseUpdateTime;
     }
@@ -299,6 +308,8 @@ public class SnakeScript : MonoBehaviour
         tailInstance.transform.SetParent(this.transform);
         tailInstance.LastPostion = _snakeSegmentList[1].transform.localPosition;
         tailInstance.SetOnCollisionCallback(OnTailCollision);
+        tailInstance.SetColor(_tailColor);
+
         _snakeSegmentList.Insert(1, tailInstance);
         _updateTime += _loadIncrease;
         _updateTime = Mathf.Min(_updateTime, 1);

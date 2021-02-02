@@ -20,6 +20,12 @@ namespace SnakeGame_Arvore_Test.Assets.Scripts
             _onCollisionCallback = onCollision;
         }
 
+        public void SetColor(Color color)
+        {
+            var meshRender = GetComponent<MeshRenderer>();
+            meshRender.material.color = color;
+        }
+
         void OnTriggerEnter(Collider other)
         {
             if(_onCollisionCallback != null){
