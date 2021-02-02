@@ -1,4 +1,5 @@
-﻿using SnakeGame.Assets.Scripts;
+﻿using System.Collections;
+using SnakeGame.Assets.Scripts;
 using UnityEngine;
 
 namespace Assets.Scripts.Snake
@@ -9,6 +10,17 @@ namespace Assets.Scripts.Snake
         [SerializeField] private int _checkDirectionTime = 0;
 
         private int _moveInteractions = 0;
+
+        protected override void Start()
+        {
+            base.Start();
+            OnSnakeDeath += OnOnSnakeDeath;
+        }
+
+        private void OnOnSnakeDeath(SnakeScript obj)
+        {
+            Respawn();
+        }
 
         protected override void MoveSnake()
         {

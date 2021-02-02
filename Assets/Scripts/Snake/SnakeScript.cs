@@ -29,7 +29,7 @@ public class SnakeScript : MonoBehaviour
     private int _batteringRamBlocks = 0;
     private TimeTravelStatusHolder _timeTravelStatusHolder;
     private float _nextUpdate;
-    private Color _tailColor;
+    private Color _tailColor = Color.green;
 
     protected SnakeBodyPart _snakeHead{
         get{
@@ -39,7 +39,7 @@ public class SnakeScript : MonoBehaviour
 
     private List<SnakeBodyPart> _snakeSegmentList;
 
-    void Start()
+    protected virtual void Start()
     {
         InitializeDefaultSnake(_initialSnakeSize, transform.position, true);
         _moveSnake = true;
@@ -49,8 +49,10 @@ public class SnakeScript : MonoBehaviour
        
         _snakeSegmentList = new List<SnakeBodyPart>();
 
-        _tailColor = Random.ColorHSV();
-        Debug.LogError(_tailColor);
+        if (changeColor)
+        {
+            _tailColor = Random.ColorHSV();
+        }
 
         for(int i = 0; i < snakeSize - 1; i++){
             var tailInstance = Instantiate(_snakeTailPrefab, position, Quaternion.identity);
@@ -58,10 +60,7 @@ public class SnakeScript : MonoBehaviour
             tailInstance.SetOnCollisionCallback(OnTailCollision);
             tailInstance.transform.SetParent(this.transform);
             position.x += size;
-            if (changeColor)
-            {
-                tailInstance.SetColor(_tailColor);
-            }
+            tailInstance.SetColor(_tailColor);
             _snakeSegmentList.Add(tailInstance);
         }
 
@@ -194,10 +193,10 @@ public class SnakeScript : MonoBehaviour
         this.gameObject.SetActive(true);
         InitializeDefaultSnake(_initialSnakeSize, transform.position, false);
 
-        foreach (var segment in _snakeSegmentList)
-        {
-            segment.PlayerRespawnAnimation();
-        }
+        //foreach (var segment in _snakeSegmentList)
+        //{
+        //    segment.PlayerRespawnAnimation();
+        //}
         
         //TODO animation
         StartCoroutine(StartMovingAfterRespawn());
@@ -212,10 +211,10 @@ public class SnakeScript : MonoBehaviour
     private IEnumerator StartMovingAfterRespawn(){
         yield return new WaitForSeconds(_starMovingInSecondsAfterRespawn);
         _moveSnake = true;
-        foreach (var segment in _snakeSegmentList)
-        {
-            segment.StopRespawnAnimation();
-        }
+        //foreach (var segment in _snakeSegmentList)
+        //{
+        //    segment.StopRespawnAnimation();
+        //}
     }
 
     private bool CheckForSelfCollision(Collider otherCollider){       
