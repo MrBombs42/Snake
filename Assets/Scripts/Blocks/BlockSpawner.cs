@@ -17,6 +17,11 @@ namespace SnakeGame.Assets.Scripts
             GeneraterandomBlock();
         }
 
+        public List<Block> GetBlocksSpawned()
+        {
+            return _spawnedBlocks;
+        }
+
         private void GeneraterandomBlock(){
             var block = CreateBlock(GetRandomPosition());
             block.OnDestroyed += OnBlockGotDestroyed;

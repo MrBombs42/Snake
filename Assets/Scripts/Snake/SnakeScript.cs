@@ -23,13 +23,13 @@ public class SnakeScript : MonoBehaviour
     public PlayerKeyCodePair KeyCodePair{get{return _keyCodePair;}}
 
     private PlayerKeyCodePair _keyCodePair;
-    private Vector3 _movementDirection; 
+    protected Vector3 _movementDirection; 
     private float _updateTime;
     private int _batteringRamBlocks = 0;
     private TimeTravelStatusHolder _timeTravelStatusHolder;
     private float _nextUpdate;
 
-    private SnakeBodyPart _snakeHead{
+    protected SnakeBodyPart _snakeHead{
         get{
             return _snakeSegmentList[0];
         }
@@ -40,6 +40,7 @@ public class SnakeScript : MonoBehaviour
     void Start()
     {
         InitializeDefaultSnake(_initialSnakeSize, transform.position);
+        _moveSnake = true;
     }
 
     private void CreateSnake(int snakeSize, Vector3 position){
@@ -242,7 +243,7 @@ public class SnakeScript : MonoBehaviour
         }
     }
 
-    private void MoveSnake(){
+    protected virtual void MoveSnake(){
         _snakeHead.LastPostion = _snakeHead.transform.localPosition;
         _snakeHead.transform.localPosition += _movementDirection;
 
@@ -300,5 +301,6 @@ public class SnakeScript : MonoBehaviour
         tailInstance.SetOnCollisionCallback(OnTailCollision);
         _snakeSegmentList.Insert(1, tailInstance);
         _updateTime += _loadIncrease;
+        _updateTime = Mathf.Min(_updateTime, 1);
     }
 }
