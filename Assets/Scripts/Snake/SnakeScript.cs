@@ -149,8 +149,6 @@ public class SnakeScript : MonoBehaviour
         if(OnSnakeDeath != null){
             OnSnakeDeath(this);
         }
-
-        Debug.LogError("Mori");
     }
 
     private void TimeTravel()
@@ -158,10 +156,10 @@ public class SnakeScript : MonoBehaviour
         InitializeDefaultSnake(_timeTravelStatusHolder.SnakeSize, _timeTravelStatusHolder.Position, false);
         this.gameObject.SetActive(true);
         //TODO change feedback
-        foreach (var segment in _snakeSegmentList)
-        {
-            segment.PlayerRespawnAnimation();
-        }
+        //foreach (var segment in _snakeSegmentList)
+        //{
+        //    segment.PlayerRespawnAnimation();
+        //}
 
         //TODO animation
         StartCoroutine(StartMovingAfterRespawn());

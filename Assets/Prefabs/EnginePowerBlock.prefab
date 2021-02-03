@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1064716915700821568}
   - component: {fileID: 3898198540098227210}
   m_Layer: 0
-  m_Name: Block
+  m_Name: EnginePowerBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,7 +96,7 @@ TextMesh:
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278226943
 --- !u!65 &1064716915700821568
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -122,3 +122,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5584ee8cfb43ea7488eee1b64989c739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlockTypes: 0
