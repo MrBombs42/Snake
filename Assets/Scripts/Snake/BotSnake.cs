@@ -41,18 +41,18 @@ namespace Assets.Scripts.Snake
         }
 
 
-        private void UpdateBotDirection(Vector3 dirA, Vector3 dirB)
+        private void UpdateBotDirection(Vector3 currentDirection, Vector3 desiredDirection)
         {
-            Vector3 cross = Vector3.Cross(dirA, dirB);
-            var mod = cross.y;
+            Vector3 cross = Vector3.Cross(currentDirection, desiredDirection);
+            var turnRight = cross.y > 0;
 
-            var dot = Vector3.Dot(dirA, dirB);
+            var dot = Vector3.Dot(currentDirection, desiredDirection);
             if (dot > 0.9f)
             {
                 return;
             }
 
-            if (mod > 0.0)
+            if (turnRight)
             {
                 _movementDirection = Quaternion.Euler(0, 90, 0) * _movementDirection;
             }

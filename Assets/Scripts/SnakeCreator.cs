@@ -29,10 +29,7 @@ namespace SnakeGame.Assets.Scripts
 
         private void CheckInput(){
 
-            string feedback;
-            feedback = "Precisone 2 teclas para criar uma cobra";
-
-            _snakeCreatorUI.ChangeFeedback(feedback);       
+            _snakeCreatorUI.DefaultFeedback();       
 
             if (!Input.anyKey){               
                 return;
@@ -44,9 +41,7 @@ namespace SnakeGame.Assets.Scripts
             
             if(keysPressed.Length == 1){
 
-                feedback = string.Format("Tecla precionada: {0}. Precisone uma segunda tecla não utilizada", keysPressed[0]);
-               
-                _snakeCreatorUI.ChangeFeedback(feedback);                
+                _snakeCreatorUI.PressOneMoreKeyFeedback(keysPressed[0].ToString());
                 return;
             }
 

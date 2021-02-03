@@ -155,11 +155,6 @@ public class SnakeScript : MonoBehaviour
     {
         InitializeDefaultSnake(_timeTravelStatusHolder.SnakeSize, _timeTravelStatusHolder.Position, false);
         this.gameObject.SetActive(true);
-        //TODO change feedback
-        //foreach (var segment in _snakeSegmentList)
-        //{
-        //    segment.PlayerRespawnAnimation();
-        //}
 
         //TODO animation
         StartCoroutine(StartMovingAfterRespawn());
@@ -191,12 +186,6 @@ public class SnakeScript : MonoBehaviour
         this.gameObject.SetActive(true);
         InitializeDefaultSnake(_initialSnakeSize, transform.position, false);
 
-        //foreach (var segment in _snakeSegmentList)
-        //{
-        //    segment.PlayerRespawnAnimation();
-        //}
-        
-        //TODO animation
         StartCoroutine(StartMovingAfterRespawn());
     }
 
@@ -206,13 +195,10 @@ public class SnakeScript : MonoBehaviour
         _updateTime = _baseUpdateTime;
     }
 
-    private IEnumerator StartMovingAfterRespawn(){
+    private IEnumerator StartMovingAfterRespawn()
+    {
         yield return new WaitForSeconds(_starMovingInSecondsAfterRespawn);
         _moveSnake = true;
-        //foreach (var segment in _snakeSegmentList)
-        //{
-        //    segment.StopRespawnAnimation();
-        //}
     }
 
     private bool CheckForSelfCollision(Collider otherCollider){       
