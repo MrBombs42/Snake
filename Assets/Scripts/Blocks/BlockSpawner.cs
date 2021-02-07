@@ -14,7 +14,7 @@ namespace SnakeGame.Assets.Scripts
 
         void Start()
         {
-            GeneraterandomBlock();
+            GenerateRandomBlock();
         }
 
         public List<Block> GetBlocksSpawned()
@@ -22,7 +22,7 @@ namespace SnakeGame.Assets.Scripts
             return _spawnedBlocks;
         }
 
-        private void GeneraterandomBlock(){
+        private void GenerateRandomBlock(){
             var block = CreateBlock(GetRandomPosition());
             block.OnDestroyed += OnBlockGotDestroyed;
             _spawnedBlocks.Add(block);
@@ -31,7 +31,7 @@ namespace SnakeGame.Assets.Scripts
         private void OnBlockGotDestroyed(Block block){
             block.OnDestroyed -= OnBlockGotDestroyed;
             _spawnedBlocks.Remove(block);
-            GeneraterandomBlock();
+            GenerateRandomBlock();
         }
 
 

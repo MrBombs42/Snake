@@ -27,6 +27,8 @@ namespace SnakeGame.Assets.Scripts
             CheckForDeadSnakeRespawn();
         }
 
+        //TODO separar classe criar presenter
+        //TODO fazer criar o bot tmb
         private void CheckInput(){
 
             _snakeCreatorUI.DefaultFeedback();       
