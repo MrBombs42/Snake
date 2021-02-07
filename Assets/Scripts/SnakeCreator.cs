@@ -21,8 +21,8 @@ namespace SnakeGame.Assets.Scripts
         private List<SnakeScript> _snakeSpawned = new List<SnakeScript>();
         private List<SnakeScript> _deadSnakes = new List<SnakeScript>();
 
-        public List<SnakeScript> DeadSnakes {get{return _deadSnakes;}}
-        private List<SnakeScript> SpawnedSnakes {get{return _snakeSpawned;}}
+        public List<SnakeScript> DeadSnakes { get{ return _deadSnakes;}}
+        private List<SnakeScript> SpawnedSnakes { get{ return _snakeSpawned;}}
       
 
         public SnakeCreator(SnakeScript snakePrefab, BotSnake botSnakePrefab)

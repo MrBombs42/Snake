@@ -12,10 +12,6 @@ namespace Snake.Assets.Scripts
         [SerializeField] private BotSnake _botSnakePrefab;
         [SerializeField] private float _timeToSnakeBotRespawn = 2;
 
-        //TODO verificar mmortos para mostra mensagem de respawn
-        //criar envento de cobra morta e revivida no snakeCreator. Escutar e atualizar view
-        //View mostra o nome, as teclas e a pontuacao
-
         private SnakeCreator _snakeCreator;
 
         void Awake()
@@ -39,6 +35,8 @@ namespace Snake.Assets.Scripts
             var bot = _snakeCreator.CreateBotSnake();
             bot.OnSnakeDeath += OnBotSnakeDeath;
             _snakeCreatorUI.AddSnakeCell(bot);
+
+            _snakeCreatorUI.CreateSnakeFeedback();
         }
 
         private void OnBotSnakeDeath(SnakeScript snake)
@@ -59,7 +57,6 @@ namespace Snake.Assets.Scripts
         {
             _snakeCreator.VerifyInputAndTryCreateNewSnake();
             _snakeCreator.CheckForDeadSnakeRespawn();
-            TryDisableRespawnFeeback();
         }        
 
         private void TryDisableRespawnFeeback()
@@ -68,7 +65,8 @@ namespace Snake.Assets.Scripts
             {
                 _snakeCreatorUI.DisableRespawnFeedback();
             }
-        }        
+        }     
+           
         private void OnSnakeCreated(SnakeScript snake)
         {
             _snakeCreatorUI.AddSnakeCell(snake);
@@ -77,11 +75,13 @@ namespace Snake.Assets.Scripts
         private void OnSnakeRespawn(SnakeScript snake)
         {
             _snakeCreatorUI.EnableSnakeCell(snake);
+            TryDisableRespawnFeeback();
         }
 
         private void OnSnakeDeath(SnakeScript snake)
         {
             _snakeCreatorUI.DisableSnakeCell(snake);
+            _snakeCreatorUI.EnableRespawnFeedback();
         }
   }
 }

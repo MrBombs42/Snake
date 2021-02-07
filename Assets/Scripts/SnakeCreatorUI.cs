@@ -21,23 +21,24 @@ namespace SnakeGame.Assets.Scripts
             cellView.transform.SetParent(_gridTransform);
             cellView.ConfigureForSnake(snake);
             _cellViews.Add(cellView);
+            cellView.SetTextColor(Color.green);
         }
 
         public void DisableSnakeCell(SnakeScript snake){
             var cellView = _cellViews.FirstOrDefault(s => s.PlayerId == snake.GetInstanceID());
             if(cellView){
-                cellView.gameObject.SetActive(false);
+                cellView.SetTextColor(Color.red);
             }
         }
 
         public void EnableSnakeCell(SnakeScript snake){
             var cellView = _cellViews.FirstOrDefault(s => s.PlayerId == snake.GetInstanceID());
             if(cellView){
-                cellView.gameObject.SetActive(true);
+                cellView.SetTextColor(Color.green);
             }
         }
 
-       public void DefaultFeedback()
+       public void CreateSnakeFeedback()
        {
            TryEnableFeedback();
 

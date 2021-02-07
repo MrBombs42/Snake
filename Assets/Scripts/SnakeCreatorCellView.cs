@@ -17,5 +17,10 @@ namespace Snake.Assets.Scripts
             var keys = snake.KeyCodePair;
             _playerKeys.text = string.Format("{0} + {1}", keys.LeftKey, keys.RightKey);
         }
+
+        public void SetTextColor(Color color){
+            _playerKeys.color = color;
+            _playerName.color = color;
+        }
     }
 }
