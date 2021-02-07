@@ -1,9 +1,11 @@
 namespace SnakeGame.Assets.Scripts
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using global::Assets.Scripts.Snake;
     using UnityEngine;
+    using Object = UnityEngine.Object;
 
     public class SnakeCreator{
 
@@ -59,9 +61,9 @@ namespace SnakeGame.Assets.Scripts
 
         public BotSnake CreateBotSnake(){
 
-            var bot = Object.Instantiate(_botSnakePrefab);
-            bot.OnSnakeDeath += OnBotSnakeDeath;
+            var bot = Object.Instantiate(_botSnakePrefab);           
             bot.gameObject.name = "BotSnake";
+            bot.OnSnakeDeath += OnSnakeDeath;
             _snakeSpawned.Add(bot);
             return bot;
         }
@@ -85,13 +87,6 @@ namespace SnakeGame.Assets.Scripts
                     i--;
                 }
             }
-        }
-
-        private void OnBotSnakeDeath(SnakeScript deadSnake){
-             if(_deadSnakes.Contains(deadSnake)){
-                return;
-            }
-            _deadSnakes.Add(deadSnake);
         }
 
         private void OnSnakeDeath(SnakeScript deadSnake){
