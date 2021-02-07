@@ -6,7 +6,7 @@ namespace Assets.Scripts.Snake
 {
     public class BotSnake : SnakeScript
     {
-        [SerializeReference] private BlockSpawner _blockSpawner;
+        private BlockSpawner _blockSpawner;
         [SerializeField] private int _checkDirectionTime = 0;
 
         private int _moveInteractions = 0;
@@ -14,12 +14,7 @@ namespace Assets.Scripts.Snake
         protected override void Start()
         {
             base.Start();
-            OnSnakeDeath += OnOnSnakeDeath;
-        }
-
-        private void OnOnSnakeDeath(SnakeScript obj)
-        {
-            Respawn();
+            _blockSpawner = GameObject.FindObjectOfType<BlockSpawner>();
         }
 
         protected override void MoveSnake()
