@@ -27,7 +27,7 @@ namespace SnakeGame.Assets.Scripts
             _botSnakePrefab = botSnakePrefab;
         }
 
-        public void CheckInput(){           
+        public void VerifyInputAndTryCreateNewSnake(){           
 
             if (!Input.anyKey){               
                 return;

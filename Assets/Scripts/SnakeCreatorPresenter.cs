@@ -12,6 +12,9 @@ namespace Snake.Assets.Scripts
         [SerializeField] private BotSnake _botSnakePrefab;
         [SerializeField] private float _timeToSnakeBotRespawn = 2;
 
+        //TODO verificar mmortos para mostra mensagem de respawn
+        //criar envento de cobra morta e revivida no snakeCreator. Escutar e atualizar view
+        //View mostra o nome, as teclas e a pontuacao
 
         private SnakeCreator _snakeCreator;
 
@@ -41,7 +44,7 @@ namespace Snake.Assets.Scripts
 
         void Update()
         {
-            _snakeCreator.CheckInput();
+            _snakeCreator.VerifyInputAndTryCreateNewSnake();
             _snakeCreator.CheckForDeadSnakeRespawn();
             TryDisableRespawnFeeback();
         }        
