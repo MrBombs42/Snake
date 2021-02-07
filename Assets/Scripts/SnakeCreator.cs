@@ -1,37 +1,30 @@
-using System;
-
 namespace SnakeGame.Assets.Scripts
 {
     using System.Collections.Generic;
     using System.Linq;
     using UnityEngine;
-    
-    public class SnakeCreator : MonoBehaviour {
 
-        [SerializeField] private SnakeScript _snakePrefab;
-        [SerializeField] private SnakeCreatorUI _snakeCreatorUI;
+    public class SnakeCreator{
+
+        private SnakeScript _snakePrefab;
 
         private List<KeyCode> _usedKeys = new List<KeyCode>();
 
         private List<SnakeScript> _snakeSpawned = new List<SnakeScript>();
         private List<SnakeScript> _deadSnakes = new List<SnakeScript>();
 
-        void Start()
-        {
-            TryDisableRespawnFeeback();
-        }
+        public List<SnakeScript> DeadSnakes {get{return _deadSnakes;}}
+        private List<SnakeScript> SpawnedSnakes {get{return _snakeSpawned;}}
+      
 
-        void Update()
+        public SnakeCreator(SnakeScript snakePrefab)
         {
-            CheckInput();
-            CheckForDeadSnakeRespawn();
+            _snakePrefab = snakePrefab;
         }
 
         //TODO separar classe criar presenter
         //TODO fazer criar o bot tmb
-        private void CheckInput(){
-
-            _snakeCreatorUI.DefaultFeedback();       
+        public void CheckInput(){           
 
             if (!Input.anyKey){               
                 return;
@@ -40,17 +33,11 @@ namespace SnakeGame.Assets.Scripts
             var keysPressed = InputHelper.GetCurrentKeys()
                 .Where(key => !_usedKeys.Contains(key) && key != KeyCode.None)
                 .ToArray();
-            
-            if(keysPressed.Length == 1){
-
-                _snakeCreatorUI.PressOneMoreKeyFeedback(keysPressed[0].ToString());
-                return;
-            }
 
             if (keysPressed.Length == 2)
             {
                 //TODO position
-                var snake = Instantiate(_snakePrefab);
+                var snake = Object.Instantiate(_snakePrefab);
                 snake.SetSnakeInput(keysPressed[1], keysPressed[0]);
                 snake.OnSnakeDeath += OnSnakeDeath;
                 snake.gameObject.name = string.Format("snake {0}", _snakeSpawned.Count);
@@ -80,21 +67,12 @@ namespace SnakeGame.Assets.Scripts
                     snake.Respawn();
                     _deadSnakes.Remove(snake);
                     i--;
-                    TryDisableRespawnFeeback();
                 }
             }
         }
 
-        private void TryDisableRespawnFeeback()
-        {
-            if (_deadSnakes.Count == 0)
-            {
-                _snakeCreatorUI.DisableRespawnFeedback();
-            }
-        }
-
         private void OnSnakeDeath(SnakeScript deadSnake){
-            _snakeCreatorUI.EnableRespawnFeedback();
+            
             if(_deadSnakes.Contains(deadSnake)){
                 return;
             }
