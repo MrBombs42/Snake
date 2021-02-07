@@ -1,15 +1,41 @@
-using System;
-
 namespace SnakeGame.Assets.Scripts
 {
-   using UnityEngine;
-   using UnityEngine.UI;
-   
-   public class SnakeCreatorUI : MonoBehaviour {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Snake.Assets.Scripts;
+    using UnityEngine;
+    using UnityEngine.UI;
+
+    public class SnakeCreatorUI : MonoBehaviour {
        
        [SerializeField] private Text _feedback;
        [SerializeField] private Text _respawnFeedback;
+       [SerializeField] private SnakeCreatorCellView _snakeCreatorCellviewPrefab;
+       [SerializeField] private Transform _gridTransform;
 
+       private List<SnakeCreatorCellView> _cellViews = new List<SnakeCreatorCellView>();
+
+
+        public void AddSnakeCell(SnakeScript snake){
+            var cellView = Instantiate(_snakeCreatorCellviewPrefab);
+            cellView.transform.SetParent(_gridTransform);
+            cellView.ConfigureForSnake(snake);
+            _cellViews.Add(cellView);
+        }
+
+        public void DisableSnakeCell(SnakeScript snake){
+            var cellView = _cellViews.FirstOrDefault(s => s.PlayerId == snake.GetInstanceID());
+            if(cellView){
+                cellView.gameObject.SetActive(false);
+            }
+        }
+
+        public void EnableSnakeCell(SnakeScript snake){
+            var cellView = _cellViews.FirstOrDefault(s => s.PlayerId == snake.GetInstanceID());
+            if(cellView){
+                cellView.gameObject.SetActive(true);
+            }
+        }
 
        public void DefaultFeedback()
        {
@@ -22,7 +48,7 @@ namespace SnakeGame.Assets.Scripts
        {
            TryEnableFeedback();
 
-           _feedback.text = string.Format("Tecla precionada: {0}. Precisone uma segunda tecla não utilizada", key);
+           _feedback.text = string.Format("Tecla precionada: {0}. Precisone uma segunda tecla nï¿½o utilizada", key);
 
         }
 

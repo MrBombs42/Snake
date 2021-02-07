@@ -7,7 +7,7 @@ namespace Snake.Assets.Scripts
     using UnityEngine;
 
     public class SnakeCreatorPresenter : MonoBehaviour {
-        [SerializeField] private SnakeScript _snakePrefab;
+        [SerializeField] private SnakeScript _snakePrefab;//TODO get from a scriptableobject
         [SerializeField] private SnakeCreatorUI _snakeCreatorUI;
         [SerializeField] private BotSnake _botSnakePrefab;
         [SerializeField] private float _timeToSnakeBotRespawn = 2;
@@ -21,6 +21,16 @@ namespace Snake.Assets.Scripts
         void Awake()
         {
             _snakeCreator = new SnakeCreator(_snakePrefab, _botSnakePrefab);
+            _snakeCreator.OnSnakeDeathEvt += OnSnakeDeath;
+            _snakeCreator.OnSnakeRespawnEvt += OnSnakeRespawn;
+            _snakeCreator.OnSnakeCreatedEvt += OnSnakeCreated;
+        }
+
+        void OnDestroy()
+        {
+            _snakeCreator.OnSnakeDeathEvt -= OnSnakeDeath;
+            _snakeCreator.OnSnakeRespawnEvt -= OnSnakeRespawn;
+            _snakeCreator.OnSnakeCreatedEvt -= OnSnakeCreated;
         }
 
         void Start()
@@ -28,11 +38,13 @@ namespace Snake.Assets.Scripts
             TryDisableRespawnFeeback();
             var bot = _snakeCreator.CreateBotSnake();
             bot.OnSnakeDeath += OnBotSnakeDeath;
+            _snakeCreatorUI.AddSnakeCell(bot);
         }
 
         private void OnBotSnakeDeath(SnakeScript snake)
         {
             StartCoroutine(RespawnSnakeBot(snake));
+            _snakeCreatorUI.DisableSnakeCell(snake);
         }
 
         private IEnumerator RespawnSnakeBot(SnakeScript snake)
@@ -40,6 +52,7 @@ namespace Snake.Assets.Scripts
             yield return new WaitForSeconds(_timeToSnakeBotRespawn);
 
             snake.Respawn();
+            _snakeCreatorUI.EnableSnakeCell(snake);
         }
 
         void Update()
@@ -55,6 +68,20 @@ namespace Snake.Assets.Scripts
             {
                 _snakeCreatorUI.DisableRespawnFeedback();
             }
+        }        
+        private void OnSnakeCreated(SnakeScript snake)
+        {
+            _snakeCreatorUI.AddSnakeCell(snake);
+        }
+
+        private void OnSnakeRespawn(SnakeScript snake)
+        {
+            _snakeCreatorUI.EnableSnakeCell(snake);
+        }
+
+        private void OnSnakeDeath(SnakeScript snake)
+        {
+            _snakeCreatorUI.DisableSnakeCell(snake);
         }
   }
 }

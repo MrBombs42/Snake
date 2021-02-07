@@ -9,6 +9,10 @@ namespace SnakeGame.Assets.Scripts
 
     public class SnakeCreator{
 
+        public event Action<SnakeScript> OnSnakeDeathEvt;
+        public event Action<SnakeScript> OnSnakeRespawnEvt;
+        public event Action<SnakeScript> OnSnakeCreatedEvt;
+
         private SnakeScript _snakePrefab;
         private BotSnake _botSnakePrefab;
 
@@ -39,12 +43,15 @@ namespace SnakeGame.Assets.Scripts
 
             if (keysPressed.Length == 2)
             {
-                var snake = CreateNewSnake(keysPressed);
-              
-
+                var snake = CreateNewSnake(keysPressed);             
+                
                 for (int i = 0; i < 2; i++)
                 {
                     _usedKeys.Add(keysPressed[i]);
+                }
+
+                if(OnSnakeCreatedEvt != null){
+                    OnSnakeCreatedEvt(snake);
                 }
             }
         }
@@ -85,6 +92,9 @@ namespace SnakeGame.Assets.Scripts
                     snake.Respawn();
                     _deadSnakes.Remove(snake);
                     i--;
+                    if(OnSnakeRespawnEvt != null){
+                        OnSnakeRespawnEvt(snake);
+                    }
                 }
             }
         }
@@ -95,6 +105,10 @@ namespace SnakeGame.Assets.Scripts
                 return;
             }
             _deadSnakes.Add(deadSnake);
+
+            if(OnSnakeDeathEvt != null){
+                OnSnakeDeathEvt(deadSnake);
+            }
         }
         
     }
