@@ -29,10 +29,6 @@ namespace SnakeGame.Assets.Scripts
         public SnakeCreator()
         {
             _snakePrefabsCreatorScriptableObject = Resources.Load<SnakePrefabsCreatorScriptableObject>("SnakePrefabsCreator");
-            if (_snakePrefabsCreatorScriptableObject == null)
-            {
-                UnityEngine.Debug.LogError("SDASDASDASAD");
-            }
         }
 
         public void VerifyInputAndTryCreateNewSnake(){           
