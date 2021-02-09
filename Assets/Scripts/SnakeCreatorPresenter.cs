@@ -7,16 +7,16 @@ namespace Snake.Assets.Scripts
     using UnityEngine;
 
     public class SnakeCreatorPresenter : MonoBehaviour {
-        [SerializeField] private SnakeScript _snakePrefab;//TODO get from a scriptableobject
-        [SerializeField] private SnakeCreatorUI _snakeCreatorUI;
-        [SerializeField] private BotSnake _botSnakePrefab;
+        
+        
         [SerializeField] private float _timeToSnakeBotRespawn = 2;
+        [SerializeField] private SnakeCreatorUI _snakeCreatorUI;
 
         private SnakeCreator _snakeCreator;
 
         void Awake()
         {
-            _snakeCreator = new SnakeCreator(_snakePrefab, _botSnakePrefab);
+            _snakeCreator = new SnakeCreator();
             _snakeCreator.OnSnakeDeathEvt += OnSnakeDeath;
             _snakeCreator.OnSnakeRespawnEvt += OnSnakeRespawn;
             _snakeCreator.OnSnakeCreatedEvt += OnSnakeCreated;

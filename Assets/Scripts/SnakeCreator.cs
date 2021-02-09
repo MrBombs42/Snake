@@ -1,3 +1,5 @@
+using Assets.Scripts;
+
 namespace SnakeGame.Assets.Scripts
 {
     using System;
@@ -13,9 +15,6 @@ namespace SnakeGame.Assets.Scripts
         public event Action<SnakeScript> OnSnakeRespawnEvt;
         public event Action<SnakeScript> OnSnakeCreatedEvt;
 
-        private SnakeScript _snakePrefab;
-        private BotSnake _botSnakePrefab;
-
         private List<KeyCode> _usedKeys = new List<KeyCode>();
 
         private List<SnakeScript> _snakeSpawned = new List<SnakeScript>();
@@ -23,12 +22,17 @@ namespace SnakeGame.Assets.Scripts
 
         public List<SnakeScript> DeadSnakes { get{ return _deadSnakes;}}
         private List<SnakeScript> SpawnedSnakes { get{ return _snakeSpawned;}}
+
+        private SnakePrefabsCreatorScriptableObject _snakePrefabsCreatorScriptableObject;
       
 
-        public SnakeCreator(SnakeScript snakePrefab, BotSnake botSnakePrefab)
+        public SnakeCreator()
         {
-            _snakePrefab = snakePrefab;
-            _botSnakePrefab = botSnakePrefab;
+            _snakePrefabsCreatorScriptableObject = Resources.Load<SnakePrefabsCreatorScriptableObject>("SnakePrefabsCreator");
+            if (_snakePrefabsCreatorScriptableObject == null)
+            {
+                UnityEngine.Debug.LogError("SDASDASDASAD");
+            }
         }
 
         public void VerifyInputAndTryCreateNewSnake(){           
@@ -58,7 +62,7 @@ namespace SnakeGame.Assets.Scripts
 
         private SnakeScript CreateNewSnake(KeyCode[] keysPressed){
 
-            var snake = Object.Instantiate(_snakePrefab);
+            var snake = Object.Instantiate(_snakePrefabsCreatorScriptableObject.SnakePrefab);
             snake.SetSnakeInput(keysPressed[1], keysPressed[0]);
             snake.OnSnakeDeath += OnSnakeDeath;
             snake.gameObject.name = string.Format("snake {0}", _snakeSpawned.Count);
@@ -68,7 +72,7 @@ namespace SnakeGame.Assets.Scripts
 
         public BotSnake CreateBotSnake(){
 
-            var bot = Object.Instantiate(_botSnakePrefab);           
+            var bot = Object.Instantiate(_snakePrefabsCreatorScriptableObject.BotSnakePrefab);           
             bot.gameObject.name = "BotSnake";
             bot.OnSnakeDeath += OnSnakeDeath;
             _snakeSpawned.Add(bot);
