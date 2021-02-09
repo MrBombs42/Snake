@@ -6,7 +6,6 @@ namespace SnakeGame_Arvore_Test.Assets.Scripts
     
     public class SnakeBodyPart : MonoBehaviour {
         public Vector3 LastPostion {get;set;}
-        [SerializeField] private string _respawnAnimationName; 
 
         private Action<Collider, SnakeBodyPart> _onCollisionCallback;
 

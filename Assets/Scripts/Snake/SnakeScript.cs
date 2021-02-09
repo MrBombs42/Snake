@@ -289,7 +289,7 @@ public class SnakeScript : MonoBehaviour
         var tailInstance = Instantiate(_snakeTailPrefab, _snakeHead.LastPostion, Quaternion.identity);
         
         tailInstance.transform.SetParent(this.transform);
-        tailInstance.LastPostion = _snakeSegmentList[1].transform.localPosition;
+        tailInstance.LastPostion = _snakeSegmentList[0].transform.localPosition;
         tailInstance.SetOnCollisionCallback(OnTailCollision);
         tailInstance.SetColor(_tailColor);
 
